@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HagiiZ｜東北大学発「科学×防災」社会実装チーム</title>
+<meta name="description" content="東北大学の現役大学院生・学部生を中心とした33名の「科学×防災」社会実装チーム、HagiiZ。宮岸プロジェクトへのご支援をお願いしています。">
+
+<!-- SNSで共有したときの表示（公開URLが決まったら https://〜 の部分を書き換えてください） -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="HagiiZ｜東北大学発「科学×防災」社会実装チーム">
+<meta property="og:description" content="東北大学の現役大学院生・学部生を中心とした33名の「科学×防災」社会実装チーム、HagiiZ。">
+<meta property="og:image" content="https://USERNAME.github.io/REPOSITORY/images/ogp/top.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Yomogi&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="top">
+
+<header class="top-head">
+  <a class="logo" href="index.html">HagiiZ</a>
+  <span class="head-tag">東北大学発「科学×防災」社会実装チーム</span>
+</header>
+
+<main>
+
+  <!-- ヒーロー：ミニ模型 -->
+  <section class="hero2" aria-labelledby="hero-title">
+    <div class="hero2-inner">
+      <div class="hero2-text">
+        <p class="eyebrow">まず、やってみてください</p>
+        <h1 id="hero-title">雨を降らせると、<br>他人事が自分事になる。</h1>
+        <p class="hero2-lead">私たちが手作りした洪水流域模型で、実際に起きたことです。<br>その仕組みを、教室と食卓に届けようとしています。</p>
+      </div>
+
+      <div class="model-wrap">
+        <div class="model" id="model">
+          <svg viewBox="0 0 320 200" role="img" aria-label="雨を降らせると水位が上がる模型">
+            <defs>
+              <clipPath id="clipBox"><rect x="0" y="0" width="320" height="200" rx="14"/></clipPath>
+              <clipPath id="clipRiver"><rect x="86" y="80" width="110" height="100"/></clipPath>
+            </defs>
+            <g clip-path="url(#clipBox)">
+
+              <!-- 空 -->
+              <rect x="0" y="0" width="320" height="200" fill="#E8EFF1"/>
+
+              <!-- 雨 -->
+              <g class="model-rain" stroke="#4C7C92" stroke-width="2.5" stroke-linecap="round" opacity="0">
+                <line x1="30" y1="-20" x2="24" y2="0"/><line x1="76" y1="-44" x2="70" y2="-24"/>
+                <line x1="120" y1="-12" x2="114" y2="8"/><line x1="166" y1="-52" x2="160" y2="-32"/>
+                <line x1="212" y1="-26" x2="206" y2="-6"/><line x1="258" y1="-48" x2="252" y2="-28"/>
+                <line x1="300" y1="-18" x2="294" y2="2"/><line x1="52" y1="-64" x2="46" y2="-44"/>
+              </g>
+
+              <!-- 川底 -->
+              <rect x="86" y="178" width="110" height="22" fill="#8E9A82"/>
+
+              <!-- 水（谷の中だけ。堤防の天端は y=114） -->
+              <g clip-path="url(#clipRiver)">
+                <rect class="model-water" x="86" y="172" width="110" height="6" fill="#4C7C92" opacity="0.92"/>
+              </g>
+
+              <!-- 左岸（上流の山） -->
+              <path d="M0 200 L0 108 L34 62 L64 104 L86 148 L86 200 Z" fill="#A7BCA8"/>
+
+              <!-- 右岸 -->
+              <path d="M196 152 L206 168 L320 168 L320 200 L196 200 Z" fill="#A7BCA8"/>
+
+              <!-- 堤防 -->
+              <path d="M178 170 L196 114 L220 114 L238 170 Z" fill="#7A6A66"/>
+              <path d="M196 114 L220 114 L220 120 L196 120 Z" fill="#9C8B86"/>
+              <text x="208" y="106" text-anchor="middle" font-size="11" font-weight="700" fill="#3A2226" font-family="sans-serif">堤防</text>
+
+              <!-- 氾濫（越えたときだけ現れる） -->
+              <rect class="model-flood" x="220" y="150" width="100" height="18" fill="#4C7C92" opacity="0"/>
+
+              <!-- 街 -->
+              <rect x="234" y="140" width="26" height="28" fill="#FFFFFF"/>
+              <path d="M230 140 L247 126 L264 140 Z" fill="#CF747B"/>
+              <rect x="268" y="132" width="28" height="36" fill="#FFFFFF"/>
+              <path d="M264 132 L282 117 L300 132 Z" fill="#EFC05B"/>
+              <rect x="302" y="146" width="18" height="22" fill="#FFFFFF"/>
+              <path d="M298 146 L311 135 L324 146 Z" fill="#CF747B"/>
+
+            </g>
+          </svg>
+        </div>
+        <p class="model-caption" id="model-caption" aria-live="polite">ボタンを押すと、雨が降ります。</p>
+        <div class="model-actions">
+          <button class="btn btn--pour" id="model-btn" type="button">雨を降らせる</button>
+          <button class="btn-text" id="model-reset" type="button" hidden>最初から</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 数字 -->
+  <section class="stats" aria-label="HagiiZの活動">
+    <ul>
+      <li><span class="stats-num">33</span><span class="stats-unit">名</span><span class="stats-label">東北大学の大学院生・学部生</span></li>
+      <li><span class="stats-num">10</span><span class="stats-unit">件</span><span class="stats-label">学会発表（査読あり論文も）</span></li>
+      <li><span class="stats-num">2</span><span class="stats-unit">年連続</span><span class="stats-label">防災科研の一般公開に出展</span></li>
+      <li><span class="stats-num">300</span><span class="stats-unit">万円</span><span class="stats-label">今回の目標額</span></li>
+    </ul>
+  </section>
+
+  <!-- 流れる帯 -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>科学</span><span>防災</span><span>土木</span><span>探究</span><span>洪水模型</span><span>出前授業</span><span>ボードゲーム</span><span>サイエンスカフェ</span><span>東北大学</span>
+      <span>科学</span><span>防災</span><span>土木</span><span>探究</span><span>洪水模型</span><span>出前授業</span><span>ボードゲーム</span><span>サイエンスカフェ</span><span>東北大学</span>
+    </div>
+  </div>
+
+  <!-- 代表のあいさつ -->
+  <section class="greeting" aria-labelledby="greeting-title">
+    <div class="greeting-inner">
+      <div class="greeting-text">
+        <p class="eyebrow">代表より</p>
+        <h2 id="greeting-title">まず、聞いてください。</h2>
+        <p class="greeting-sign">東北大学発 HagiiZ 代表　<span data-name></span></p>
+      </div>
+      <div class="video-frame" id="video"></div>
+    </div>
+  </section>
+
+  <!-- 3つの入口 -->
+  <section class="doors" aria-labelledby="doors-title">
+    <div class="doors-head">
+      <p class="eyebrow">3つの物語</p>
+      <h2 class="doors-title" id="doors-title">あなたに近い分野から、お読みください。</h2>
+    </div>
+
+    <div class="doors-grid">
+
+      <a class="door" data-layer="science" href="science.html">
+        <div class="door-phone">
+          <span class="door-notch" aria-hidden="true"></span>
+          <div data-slot="top/door-science" data-alt="サイエンスの物語"></div>
+        </div>
+        <div class="door-body">
+          <span class="door-pill">教育・科学に携わる方へ</span>
+          <span class="door-title">いろんなかたちの好奇心が、光る場をつくりたい</span>
+          <span class="door-go">物語を読む</span>
+        </div>
+      </a>
+
+      <a class="door" data-layer="doboku" href="doboku.html">
+        <div class="door-phone">
+          <span class="door-notch" aria-hidden="true"></span>
+          <div data-slot="top/door-doboku" data-alt="土木の物語"></div>
+        </div>
+        <div class="door-body">
+          <span class="door-pill">土木・インフラに携わる方へ</span>
+          <span class="door-title">守られた日常が、誰かの仕事の結果だと知られてほしい</span>
+          <span class="door-go">物語を読む</span>
+        </div>
+      </a>
+
+      <a class="door" data-layer="bosai" href="bosai.html">
+        <div class="door-phone">
+          <span class="door-notch" aria-hidden="true"></span>
+          <div data-slot="top/door-bosai" data-alt="防災の物語"></div>
+        </div>
+        <div class="door-body">
+          <span class="door-pill">防災に携わる方へ</span>
+          <span class="door-title">防災に関心がない人にこそ、届いてほしい</span>
+          <span class="door-go">物語を読む</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- 支援 -->
+  <section class="support" aria-labelledby="support-title">
+    <div class="support-inner">
+      <h2 id="support-title">宮岸プロジェクトへのご支援</h2>
+      <p>ご寄付は、東北大学基金のページから受け付けています。</p>
+      <div class="btn-row">
+        <a class="btn btn--donate btn--lg" data-donate href="#">寄付する</a>
+        <a class="btn btn--sub" data-project href="#">宮岸プロジェクトを見る</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <ul>
+    <li><a href="https://www.hagiiz.com/" target="_blank" rel="noopener">HagiiZ 公式サイト</a></li>
+    <li><a href="https://note.com/hagiiz_kaisetsu" target="_blank" rel="noopener">解説しますっ！（note）</a></li>
+    <li><a href="https://www.instagram.com/hagiiz_kaisetsu/" target="_blank" rel="noopener">解説しますっ！（Instagram）</a></li>
+    <li><a href="https://hagiiz-project.github.io/resilience-for-ladies-HP/" target="_blank" rel="noopener">ぼうさい女子会</a></li>
+    <li><a href="https://u35-bosai-zemi.github.io/u35-bosai-web/" target="_blank" rel="noopener">U35防災ゼミ</a></li>
+  </ul>
+  <p>© HagiiZ</p>
+</footer>
+
+<a class="btn btn--donate donate-fixed" data-donate href="#">寄付する</a>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/common.js"></script>
+<script src="assets/js/top.js"></script>
+<script src="assets/js/hero.js"></script>
+</body>
+</html>
