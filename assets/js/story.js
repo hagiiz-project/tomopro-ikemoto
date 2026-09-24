@@ -73,45 +73,34 @@
     }).join("") + "</ul>";
   }
 
-  function supportHTML() {
-    var stages = HZ.stagesHTML();
-    return '<div class="support-box">' +
-      '<div class="support-col">' +
-        '<p class="claim"><span class="hl">' + HZ.yen(SITE.GOAL || 0) + "を、こう使います。</span></p>" +
-        HZ.fundsHTML() +
-        '<div class="progress-meter" data-gauge></div>' +
-      "</div>" +
-      '<div class="support-col">' +
-        '<h3 class="mini-title">あなたの寄付で、できること</h3>' + HZ.unitsHTML() +
-        (stages ? '<h3 class="mini-title">目標を超えたら</h3>' + stages : "") +
-      "</div>" +
-      '<div class="support-col">' +
-        '<h3 class="mini-title">寄付すると届くもの</h3>' + HZ.giftsHTML() +
-        '<h3 class="mini-title">寄付のしかた</h3>' + HZ.howtoHTML() +
-        '<a class="btn btn--donate btn--lg btn--block" data-donate="story-support" href="#">寄付する</a>' +
-      "</div></div>";
-  }
-
   function crossHTML() {
     if (!SITE.CROSS_LINKS) return "";
     var others = Object.keys(LAYERS).filter(function (k) { return k !== layer; });
     return '<div class="cross"><h3 class="mini-title">ほかの視点からも読めます</h3><div class="cross-grid">' +
       others.map(function (k) {
         var L = LAYERS[k];
-        return '<a class="cross-card" data-layer="' + k + '" href="' + L.href + '">' +
+        var open = HZ.isOpen(k);
+        return '<a class="cross-card' + (open ? "" : " is-locked") + '" data-layer="' + k + '" href="' + L.href + '">' +
           '<span class="door-pill">' + HZ.escapeHTML(L.label) + "</span>" +
-          '<span class="cross-title">' + HZ.escapeHTML(L.title) + "</span></a>";
+          '<span class="cross-title">' + HZ.escapeHTML(L.title) + "</span>" +
+          (open ? "" : '<span class="cross-soon">Coming soon・' + HZ.yen(HZ.unlockAt(k)) + "達成で公開</span>") + "</a>";
       }).join("") + "</div></div>";
   }
 
-  function midHTML() {
-    return '<aside class="mid" aria-label="ここで半分">' +
-      '<p class="mid-claim">ここで、ちょうど半分。</p>' +
-      '<p class="note">この先は、私たちが積み上げてきたことと、「ともプロ！2026」で挑戦することの話です。<br>先にお金の使い道だけ見るのも大歓迎です。</p>' +
-      '<div class="btn-row">' +
-        '<a class="btn btn--sub" href="#support">使い道だけ見る</a>' +
-        '<a class="btn btn--donate" data-donate="story-mid" href="#">寄付する</a>' +
-      "</div></aside>";
+  // 「達成したら、こうなる」の背景。images/<分野>/win.jpg があればそれを、無ければ手描きのイラストを使う
+  function visionEl() {
+    var box = document.createElement("div");
+    box.className = "win-bg";
+    box.setAttribute("aria-hidden", "true");
+    var img = document.createElement("img");
+    img.alt = "";
+    img.decoding = "async";
+    img.src = "assets/img/vision-" + layer + ".svg";
+    box.appendChild(img);
+    var photo = new Image();
+    photo.onload = function () { img.src = photo.src; box.classList.add("is-photo"); };
+    photo.src = "images/" + layer + "/win." + (SITE.IMAGE_EXT || "jpg");
+    return box;
   }
 
   function sceneEl(sc, idx) {
@@ -131,7 +120,8 @@
     }
 
     if (kind === "win") {
-      html = '<span class="win-label">この取り組みで、変わること</span>' + paras(sc.body, stat);
+      html = '<span class="win-label">達成したら、こうなる</span>' + paras(sc.body, stat);
+      art.appendChild(visionEl());
     } else {
       html += paras(sc.body, stat);
       if (sc.researchmap && SITE.RESEARCHMAP_URL) {
@@ -144,7 +134,7 @@
         var name = HZ.hasTodo(SITE.REP_NAME) && !HZ.DRAFT ? "" : (SITE.REP_NAME || "");
         html += '<p class="sign note">東北大学発 HagiiZ 代表　' + HZ.fmt(name) + "</p>";
         html += '<div class="btn-row">' +
-          '<a class="btn btn--donate btn--lg" data-donate="story-end" href="#">寄付する</a></div>';
+          '<a class="btn btn--support btn--lg" data-support="story-end" href="support.html">この挑戦を応援する</a></div>';
         html += HZ.shareHTML();
         html += crossHTML();
       }
@@ -191,7 +181,6 @@
           '<button class="btn btn--fast" type="button" data-fast-on>⚡ 倍速で読む（約' + total.fast + "分）</button>" +
           '<a class="btn btn--sub" href="#s-1" data-read>全部読む（約' + total.all + "分）</a>" +
         "</div>" +
-        '<a class="btn-text cover-skip" href="#support">先に、お金の使い道を見る</a>' +
       "</div>";
     var fig = document.createElement("figure");
     fig.className = "cover-fig";
@@ -201,139 +190,163 @@
     return sec;
   }
 
-  /* ---------- 組み立て ---------- */
+  /* ---------- まだ公開していない物語 ---------- */
 
-  var scenesData = STORY.scenes.filter(function (s) { return s.kind !== "cover"; });
-  var coverData = STORY.scenes.filter(function (s) { return s.kind === "cover"; })[0] || { id: "01" };
+  function comingSoon() {
+    var at = HZ.unlockAt(layer);
+    document.body.classList.add("is-soon");
+    var others = Object.keys(LAYERS).filter(function (k) { return k !== layer && HZ.isOpen(k); });
+    main.innerHTML =
+      '<section class="soon">' +
+        '<div class="soon-inner">' +
+          '<span class="door-pill cover-pill">' + HZ.escapeHTML(STORY.label) + "</span>" +
+          '<p class="soon-big">Coming soon</p>' +
+          '<h1 class="cover-title">' + HZ.fmt(STORY.title) + "</h1>" +
+          '<p class="claim soon-claim"><span class="hl">この物語は、支援が' + HZ.yen(at || 0) + "に届いたら公開します。</span></p>" +
+          '<div class="progress-meter" data-gauge></div>' +
+          '<div class="btn-row"><a class="btn btn--support btn--lg" data-support="soon" href="support.html">応援して、公開を早める</a></div>' +
+          (others.length ? '<p class="soon-other note">公開中の物語：' + others.map(function (k) {
+            return '<a href="' + LAYERS[k].href + '">' + HZ.escapeHTML(LAYERS[k].title) + "</a>";
+          }).join("　") + "</p>" : "") +
+        "</div>" +
+      "</section>";
+    document.title = "Coming soon｜HagiiZ";
+    HZ.finish(document);
+    HZ.renderGauges(document);
+  }
 
-  var sceneEls = scenesData.map(function (sc, i) { return sceneEl(sc, i + 1); });
-  var sum = sceneEls.reduce(function (a, el) {
-    a.all += el._stat.all; a.fast += el._stat.fast; return a;
-  }, { all: 0, fast: 0 });
-  var FAST_CPM = CPM * 0.8; // 太字の主張は、ゆっくり目に読まれる
-  var minutes = {
-    all: Math.max(1, Math.round(sum.all / CPM)),
-    fast: Math.max(1, Math.round(sum.fast / FAST_CPM))
-  };
-
-  var frag = document.createDocumentFragment();
-  frag.appendChild(coverEl(coverData, minutes));
-  var sentinel = document.createElement("span");
-  sentinel.setAttribute("data-dock-after", "");
-  frag.appendChild(sentinel);
-
-  var flow = document.createElement("div");
-  flow.className = "flow";
-  var midAt = Math.floor(sceneEls.length / 2);
-  sceneEls.forEach(function (el, i) {
-    flow.appendChild(el);
-    if (i === midAt - 1) {
-      var mid = document.createElement("div");
-      mid.innerHTML = midHTML();
-      flow.appendChild(mid.firstChild);
-    }
+  HZ.ready(function () {
+    if (!HZ.isOpen(layer)) { comingSoon(); return; }
+    build();
   });
-  frag.appendChild(flow);
 
-  // 関連リンク
-  if (STORY.links && STORY.links.length) {
-    var links = document.createElement("section");
-    links.className = "story-links";
-    links.innerHTML = '<h2 class="mini-title">関連リンク</h2><ul>' + STORY.links.map(function (l) {
-      return '<li><a href="' + HZ.escapeHTML(l.url) + '" target="_blank" rel="noopener">' + HZ.escapeHTML(l.text) + "</a></li>";
-    }).join("") + '</ul><p><a class="home-link" href="index.html">トップページへ戻る</a></p>';
-    frag.appendChild(links);
-  }
+  function build() {
+    /* ---------- 組み立て ---------- */
 
-  main.innerHTML = "";
-  main.appendChild(frag);
+    var scenesData = STORY.scenes.filter(function (s) { return s.kind !== "cover" && s.kind !== "stages"; });
+    var coverData = STORY.scenes.filter(function (s) { return s.kind === "cover"; })[0] || { id: "01" };
 
-  document.title = STORY.title.replace(/\*\*/g, "") + "｜HagiiZ";
-  HZ.finish(document);
-  HZ.loadAllImages(main);
-  HZ.stickyBar();
+    var sceneEls = scenesData.map(function (sc, i) { return sceneEl(sc, i + 1); });
+    var sum = sceneEls.reduce(function (a, el) {
+      a.all += el._stat.all; a.fast += el._stat.fast; return a;
+    }, { all: 0, fast: 0 });
+    var FAST_CPM = CPM * 0.8; // 太字の主張は、ゆっくり目に読まれる
+    var minutes = {
+      all: Math.max(1, Math.round(sum.all / CPM)),
+      fast: Math.max(1, Math.round(sum.fast / FAST_CPM))
+    };
 
-  /* ---------- 上のバー：場面ごとの読んだ量 ---------- */
+    var frag = document.createDocumentFragment();
+    frag.appendChild(coverEl(coverData, minutes));
+    var sentinel = document.createElement("span");
+    sentinel.setAttribute("data-dock-after", "");
+    frag.appendChild(sentinel);
 
-  var segWrap = document.querySelector(".segs");
-  var leftEl = document.querySelector(".bar-left");
-  var segs = [];
-  if (segWrap) {
-    sceneEls.forEach(function () {
-      var s = document.createElement("span");
-      s.className = "seg";
-      s.innerHTML = "<i></i>";
-      segWrap.appendChild(s);
-      segs.push(s.firstChild);
-    });
-  }
+    var flow = document.createElement("div");
+    flow.className = "flow";
+    sceneEls.forEach(function (el) { flow.appendChild(el); });
+    frag.appendChild(flow);
 
-  var fast = false;
-  var ticking = false;
-
-  function update() {
-    ticking = false;
-    var line = window.innerHeight * 0.55;
-    var remainChars = 0;
-    sceneEls.forEach(function (el, i) {
-      var r = el.getBoundingClientRect();
-      var p = r.height > 0 ? Math.min(1, Math.max(0, (line - r.top) / r.height)) : (r.top < line ? 1 : 0);
-      if (segs[i]) segs[i].style.transform = "scaleX(" + p.toFixed(3) + ")";
-      remainChars += (1 - p) * (fast ? el._stat.fast : el._stat.all);
-    });
-    if (leftEl) {
-      var m = Math.ceil(remainChars / (fast ? FAST_CPM : CPM));
-      leftEl.textContent = m <= 0 ? "読了" : "のこり約" + m + "分";
+    // 関連リンク
+    if (STORY.links && STORY.links.length) {
+      var links = document.createElement("section");
+      links.className = "story-links";
+      links.innerHTML = '<h2 class="mini-title">関連リンク</h2><ul>' + STORY.links.map(function (l) {
+        return '<li><a href="' + HZ.escapeHTML(l.url) + '" target="_blank" rel="noopener">' + HZ.escapeHTML(l.text) + "</a></li>";
+      }).join("") + '</ul><p><a class="home-link" href="index.html">トップページへ戻る</a></p>';
+      frag.appendChild(links);
     }
-  }
 
-  function onScroll() {
-    if (!ticking) { ticking = true; window.requestAnimationFrame(update); }
-  }
+    main.innerHTML = "";
+    main.appendChild(frag);
 
-  /* ---------- 倍速モード ---------- */
+    document.title = STORY.title.replace(/\*\*/g, "") + "｜HagiiZ";
+    HZ.finish(document);
+    HZ.loadAllImages(main);
+    HZ.stickyBar();
 
-  var toggles = document.querySelectorAll(".fast-toggle");
+    /* ---------- 上のバー：場面ごとの読んだ量 ---------- */
 
-  function currentScene() {
-    var line = window.innerHeight * 0.35;
-    var best = null;
-    sceneEls.forEach(function (el) {
-      if (el.getBoundingClientRect().top <= line) best = el;
-    });
-    return best;
-  }
+    var segWrap = document.querySelector(".segs");
+    var leftEl = document.querySelector(".bar-left");
+    var segs = [];
+    if (segWrap) {
+      sceneEls.forEach(function () {
+        var s = document.createElement("span");
+        s.className = "seg";
+        s.innerHTML = "<i></i>";
+        segWrap.appendChild(s);
+        segs.push(s.firstChild);
+      });
+    }
 
-  function setFast(on, jump) {
-    var anchor = currentScene();
-    fast = !!on;
-    document.body.classList.toggle("is-fast", fast);
+    var fast = false;
+    var ticking = false;
+
+    function update() {
+      ticking = false;
+      var line = window.innerHeight * 0.55;
+      var remainChars = 0;
+      sceneEls.forEach(function (el, i) {
+        var r = el.getBoundingClientRect();
+        var p = r.height > 0 ? Math.min(1, Math.max(0, (line - r.top) / r.height)) : (r.top < line ? 1 : 0);
+        if (segs[i]) segs[i].style.transform = "scaleX(" + p.toFixed(3) + ")";
+        remainChars += (1 - p) * (fast ? el._stat.fast : el._stat.all);
+      });
+      if (leftEl) {
+        var m = Math.ceil(remainChars / (fast ? FAST_CPM : CPM));
+        leftEl.textContent = m <= 0 ? "読了" : "のこり約" + m + "分";
+      }
+    }
+
+    function onScroll() {
+      if (!ticking) { ticking = true; window.requestAnimationFrame(update); }
+    }
+
+    /* ---------- 倍速モード ---------- */
+
+    var toggles = document.querySelectorAll(".fast-toggle");
+
+    function currentScene() {
+      var line = window.innerHeight * 0.35;
+      var best = null;
+      sceneEls.forEach(function (el) {
+        if (el.getBoundingClientRect().top <= line) best = el;
+      });
+      return best;
+    }
+
+    function setFast(on, jump) {
+      var anchor = currentScene();
+      fast = !!on;
+      document.body.classList.toggle("is-fast", fast);
+      toggles.forEach(function (b) {
+        b.setAttribute("aria-pressed", fast ? "true" : "false");
+      });
+      HZ.track("fast_mode", { page: layer, on: fast });
+      if (jump) {
+        document.getElementById("s-1").scrollIntoView({ behavior: HZ.REDUCE ? "auto" : "smooth" });
+      } else if (anchor) {
+        anchor.scrollIntoView({ behavior: "auto" });
+      }
+      onScroll();
+    }
+
     toggles.forEach(function (b) {
-      b.setAttribute("aria-pressed", fast ? "true" : "false");
+      b.addEventListener("click", function () { setFast(!fast, false); });
     });
-    HZ.track("fast_mode", { page: layer, on: fast });
-    if (jump) {
-      document.getElementById("s-1").scrollIntoView({ behavior: HZ.REDUCE ? "auto" : "smooth" });
-    } else if (anchor) {
-      anchor.scrollIntoView({ behavior: "auto" });
-    }
-    onScroll();
+    document.querySelectorAll("[data-fast-on]").forEach(function (b) {
+      b.addEventListener("click", function () { setFast(true, true); });
+    });
+    document.querySelectorAll("[data-read]").forEach(function (a) {
+      a.addEventListener("click", function () { if (fast) setFast(false, false); });
+    });
+
+    if (/[?&]fast=1/.test(location.search)) setFast(true, false);
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    window.addEventListener("load", onScroll);
+    update();
   }
-
-  toggles.forEach(function (b) {
-    b.addEventListener("click", function () { setFast(!fast, false); });
-  });
-  document.querySelectorAll("[data-fast-on]").forEach(function (b) {
-    b.addEventListener("click", function () { setFast(true, true); });
-  });
-  document.querySelectorAll("[data-read]").forEach(function (a) {
-    a.addEventListener("click", function () { if (fast) setFast(false, false); });
-  });
-
-  if (/[?&]fast=1/.test(location.search)) setFast(true, false);
-
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", onScroll);
-  window.addEventListener("load", onScroll);
-  update();
 })();

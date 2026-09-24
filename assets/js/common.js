@@ -16,6 +16,7 @@
   var TODO_RE = /〔[^〕]*〕/;
 
   document.documentElement.classList.toggle("is-draft", DRAFT);
+  document.documentElement.classList.add("js"); // 文字をふわっと出すのは、JSが動くときだけ
 
   /* ---------- 文字 ---------- */
 
@@ -88,6 +89,10 @@
       i += 1;
       if (i < EXTS.length) {
         img.src = base + "." + EXTS[i];
+      } else if (slot.getAttribute("data-fallback") && !slot.getAttribute("data-fb-tried")) {
+        // 写真がまだ無い枠は、用意したイラストで埋める
+        slot.setAttribute("data-fb-tried", "1");
+        img.src = slot.getAttribute("data-fallback");
       } else {
         slot.classList.add("is-empty");
         // 公開時は、画像の無い枠ごと畳む
@@ -135,39 +140,34 @@
     return document.body.getAttribute("data-layer") || "top";
   }
 
-  // 受付開始前は「予定に入れる」ボタンにする（Googleカレンダーに登録）
-  function remindURL() {
-    var text = "HagiiZ｜ともプロ！2026 寄付の受付開始";
-    var details = "東北大学基金「ともプロ！2026」" + (SITE.DONATE_PAGE_NO || "") + "\n" + (SITE.DONATE_URL || "");
-    return "https://calendar.google.com/calendar/render?action=TEMPLATE" +
-      "&text=" + encodeURIComponent(text) +
-      "&dates=20261001T090000/20261001T093000&ctz=Asia/Tokyo" +
-      "&details=" + encodeURIComponent(details);
+  // 外部の寄付ページへ行くボタン（support.html にだけ置く）
+  function donateLabel(phase) {
+    if (phase === "before") return "寄付ページを見る（受付は10/1から）";
+    if (phase === "after") return "寄付ページで結果を見る";
+    return "東北大学基金で寄付する";
   }
 
   function applyLinks(root) {
     var phase = cfState().phase;
     document.documentElement.setAttribute("data-phase", phase);
     (root || document).querySelectorAll("[data-donate]").forEach(function (a) {
-      var small = a.classList.contains("btn--sm") || !!a.closest(".dock");
+      a.href = SITE.DONATE_URL || "#";
       a.target = "_blank";
       a.rel = "noopener";
-      if (phase === "before") {
-        a.href = remindURL();
-        a.textContent = small ? "予定に入れる" : "10/1の開始を予定に入れる";
-        a.classList.add("is-remind");
-      } else if (phase === "after") {
-        a.href = SITE.DONATE_URL || "#";
-        a.textContent = small ? "結果を見る" : "寄付ページで結果を見る";
-      } else {
-        a.href = SITE.DONATE_URL || "#";
-        a.textContent = "寄付する";
-      }
+      a.textContent = donateLabel(phase);
       if (a.getAttribute("data-bound")) return;
       a.setAttribute("data-bound", "1");
       a.addEventListener("click", function () {
-        track(cfState().phase === "before" ? "remind_click" : "donate_click",
-          { page: page(), position: a.getAttribute("data-donate") || "unknown" });
+        track("donate_click", { page: page(), position: a.getAttribute("data-donate") || "unknown" });
+      });
+    });
+    // サイト内の「応援する」：想いのページから、お金の話のページへ
+    (root || document).querySelectorAll("[data-support]").forEach(function (a) {
+      a.href = "support.html";
+      if (a.getAttribute("data-bound")) return;
+      a.setAttribute("data-bound", "1");
+      a.addEventListener("click", function () {
+        track("support_click", { page: page(), position: a.getAttribute("data-support") || "unknown" });
       });
     });
     (root || document).querySelectorAll("[data-tomopro]").forEach(function (a) {
@@ -190,6 +190,17 @@
     (root || document).querySelectorAll("[data-min]").forEach(function (el) {
       el.textContent = SITE.MIN_AMOUNT_TEXT || "";
     });
+  }
+
+  /* ---------- 公開の条件（例：土木の物語は50万円達成で公開） ---------- */
+  function unlockAt(layer) {
+    var u = SITE.UNLOCKS || {};
+    return typeof u[layer] === "number" ? u[layer] : null;
+  }
+  function isOpen(layer) {
+    var at = unlockAt(layer);
+    if (at === null || SITE.FORCE_OPEN) return true;
+    return typeof SITE.CURRENT === "number" && SITE.CURRENT >= at;
   }
 
   /* ---------- カウントダウン ---------- */
@@ -261,10 +272,22 @@
   }
 
   // data/progress.json（毎朝の自動更新）があれば、その数字を使う
-  function loadProgress(done) {
-    if (!SITE.PROGRESS_JSON || location.protocol === "file:" || !window.fetch) { done(); return; }
-    var finished = false;
-    var end = function () { if (!finished) { finished = true; done(); } };
+  var progressDone = false;
+  var waiters = [];
+  function ready(cb) { if (progressDone) cb(); else waiters.push(cb); }
+
+  function loadProgress() {
+    var end = function () {
+      if (progressDone) return;
+      progressDone = true;
+      waiters.splice(0).forEach(function (cb) { cb(); });
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", afterProgress);
+      } else {
+        afterProgress();
+      }
+    };
+    if (!SITE.PROGRESS_JSON || location.protocol === "file:" || !window.fetch) { end(); return; }
     setTimeout(end, 2500);
     fetch(SITE.PROGRESS_JSON + "?t=" + Math.floor(Date.now() / 600000), { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : null; })
@@ -277,6 +300,11 @@
         end();
       })
       .catch(end);
+  }
+
+  function afterProgress() {
+    renderGauges(document);
+    document.dispatchEvent(new CustomEvent("hz:progress"));
   }
 
   function stagesHTML() {
@@ -331,7 +359,7 @@
 
   function howtoHTML() {
     return '<ol class="howto">' +
-      '<li><span class="howto-t">「寄付する」を押す</span><span class="howto-d">東北大学基金のページが開きます。受付は10月1日から11月30日までです。</span></li>' +
+      '<li><span class="howto-t">「東北大学基金で寄付する」を押す</span><span class="howto-d">東北大学基金のページが開きます。受付は10月1日から11月30日までです。</span></li>' +
       '<li><span class="howto-t"><span data-donate-label></span>を確認</span><span class="howto-d">HagiiZのプロジェクトのひとつとして、<span data-donate-owner></span>の名義で挑戦しています。ここが私たちの窓口です。</span></li>' +
       '<li><span class="howto-t">金額と支払い方法を選ぶ</span><span class="howto-d">クレジットカード・PayPay・Amazon Pay・コンビニなど。Amazon Payなら' +
       escapeHTML(SITE.MIN_AMOUNT_TEXT || "") + "。</span></li></ol>";
@@ -341,7 +369,7 @@
 
   // 画面に入ったら、マーカーを引く／数字を数え上げる
   function observeMotion(root, sel) {
-    var marks = (root || document).querySelectorAll(sel || ".mk, .claim, [data-count], .meter");
+    var marks = (root || document).querySelectorAll(sel || ".mk, .claim, [data-count], .meter, .rv");
     if (REDUCE || !("IntersectionObserver" in window)) {
       Array.prototype.forEach.call(marks, function (el) { el.classList.add("is-on"); });
       return;
@@ -435,14 +463,11 @@
     applyCountdown(root);
     bindShare(root);
     observeMotion(root);
-    // 自動更新の数字が届いたら、ゲージだけ描き直す
-    loadProgress(function () {
-      renderGauges(document);
-      document.dispatchEvent(new CustomEvent("hz:progress"));
-    });
+    if (progressDone) renderGauges(root);
   }
 
   initAnalytics();
+  loadProgress();
 
   window.HZ = {
     DRAFT: DRAFT,
@@ -459,14 +484,15 @@
     fundsHTML: fundsHTML,
     unitsHTML: unitsHTML,
     renderGauges: renderGauges,
+    ready: ready,
+    isOpen: isOpen,
+    unlockAt: unlockAt,
     giftsHTML: giftsHTML,
     howtoHTML: howtoHTML,
     shareHTML: shareHTML,
     cfState: cfState,
     stickyBar: stickyBar,
     track: track,
-    finish: finish,
-    // 旧名（互換）
-    applyDonate: function () { applyLinks(document); }
+    finish: finish
   };
 })();
