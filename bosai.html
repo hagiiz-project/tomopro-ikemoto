@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#E24F93">
 <title>防災に関心がない人にこそ、届いてほしい｜HagiiZ</title>
 <meta name="description" content="防災に携わる方へ。本当に届けたい人は、防災の場にいない。東北大学発 HagiiZ 代表からのメッセージです。">
 
@@ -16,22 +17,27 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Yomogi&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Noto+Sans+JP:wght@500;700;900&family=Zen+Kurenaido&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="story" data-layer="bosai">
 
 <header class="bar">
   <a class="logo" href="index.html">HagiiZ</a>
-  <div class="bar-progress" role="progressbar" aria-label="読んだ量"><span class="bar-fill"></span></div>
-  <span class="bar-count" aria-live="polite"></span>
+  <span class="bar-left" aria-live="off"></span>
+  <button class="fast-toggle" type="button" aria-pressed="false">⚡ 倍速</button>
+  <a class="btn btn--donate btn--sm" data-donate="header" href="#">寄付する</a>
+  <div class="segs" aria-hidden="true"></div>
 </header>
 
 <main id="story">
-  <noscript><p style="padding:80px 20px">このページの表示には JavaScript を有効にしてください。</p></noscript>
+  <noscript><p style="padding:96px 20px">このページの表示には JavaScript を有効にしてください。寄付は<a href="https://www.kikin.tohoku.ac.jp/project/tomopro/2026/pj_009_2026">東北大学基金「ともプロ！2026」No.09</a>から受け付けています（10/1〜11/30）。</p></noscript>
 </main>
 
-<a class="btn btn--donate donate-fixed" data-donate href="#">寄付する</a>
+<div class="dock" aria-label="寄付">
+  <span class="dock-info"><span class="dock-count" data-countdown></span><span class="dock-goal">目標 <b data-goal></b></span></span>
+  <a class="btn btn--donate" data-donate="dock" href="#">寄付する</a>
+</div>
 
 <script src="assets/js/config.js"></script>
 <script src="content/bosai.js"></script>

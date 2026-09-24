@@ -3,38 +3,45 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>HagiiZ｜東北大学発「科学×防災」社会実装チーム</title>
-<meta name="description" content="東北大学の現役大学院生・学部生を中心とした33名の「科学×防災」社会実装チーム、HagiiZ。宮岸プロジェクトへのご支援をお願いしています。">
+<title>雨を降らせると、他人事が自分事になる。｜HagiiZ × ともプロ！2026</title>
+<meta name="description" content="東北大学の学生33人のチーム HagiiZ が、防災や科学に関心がない人にこそ届く「遊び」をつくります。東北大学主催の選考型クラウドファンディング「ともプロ！2026」に挑戦します（10/1〜11/30）。100円から応援できます。">
+<meta name="theme-color" content="#E24F93">
 
 <!-- SNSで共有したときの表示（公開URLが決まったら https://〜 の部分を書き換えてください） -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="HagiiZ｜東北大学発「科学×防災」社会実装チーム">
-<meta property="og:description" content="東北大学の現役大学院生・学部生を中心とした33名の「科学×防災」社会実装チーム、HagiiZ。">
+<meta property="og:title" content="雨を降らせると、他人事が自分事になる。｜HagiiZ">
+<meta property="og:description" content="東北大の学生33人が、関心ゼロの人に届く科学の遊びをつくる。東北大学「ともプロ！2026」挑戦中。100円から応援できます。">
 <meta property="og:image" content="https://USERNAME.github.io/REPOSITORY/images/ogp/top.jpg">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Yomogi&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Noto+Sans+JP:wght@500;700;900&family=Zen+Kurenaido&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="top">
 
-<header class="top-head">
+<header class="head">
   <a class="logo" href="index.html">HagiiZ</a>
   <span class="head-tag">東北大学発「科学×防災」社会実装チーム</span>
+  <span class="count-chip head-count" data-countdown></span>
+  <a class="btn btn--donate btn--sm" data-donate="header" href="#">寄付する</a>
 </header>
 
 <main>
 
-  <!-- ヒーロー：ミニ模型 -->
-  <section class="hero2" aria-labelledby="hero-title">
-    <div class="hero2-inner">
-      <div class="hero2-text">
-        <p class="eyebrow">まず、やってみてください</p>
-        <h1 id="hero-title">雨を降らせると、<br>他人事が自分事になる。</h1>
-        <p class="hero2-lead">私たちが手作りした洪水流域模型で、実際に起きたことです。<br>その仕組みを、教室と食卓に届けようとしています。</p>
+  <!-- ① ヒーロー：さわれる模型 -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <p class="sticker">まず、雨を降らせてみてください</p>
+        <h1 id="hero-title" class="hero-title">雨を降らせると、<br>他人事が<br>自分事になる。</h1>
+        <p class="hero-lead note">私たちが手作りした洪水流域模型で、実際に起きたことです。<br>その仕掛けを、全国の教室と食卓に届けます。</p>
+        <div class="hero-badges">
+          <span class="badge">東北大学主催「ともプロ！2026」選考通過</span>
+          <span class="badge badge--goal">目標 <b data-goal>50万円</b></span>
+        </div>
       </div>
 
       <div class="model-wrap">
@@ -95,97 +102,194 @@
           <button class="btn btn--pour" id="model-btn" type="button">雨を降らせる</button>
           <button class="btn-text" id="model-reset" type="button" hidden>最初から</button>
         </div>
+        <div class="model-cta" id="model-cta" hidden>
+          <p class="model-cta-t">この「自分事になる瞬間」を、<br>全国の食卓と教室へ。</p>
+          <div class="btn-row">
+            <a class="btn btn--donate" data-donate="hero-model" href="#">寄付する</a>
+            <a class="btn btn--ghost" href="#quick">まず30秒で知る</a>
+          </div>
+        </div>
       </div>
     </div>
+    <a class="hero-skip" href="#quick">30秒でわかる</a>
   </section>
 
-  <!-- 数字 -->
-  <section class="stats" aria-label="HagiiZの活動">
-    <ul>
-      <li><span class="stats-num">33</span><span class="stats-unit">名</span><span class="stats-label">東北大学の大学院生・学部生</span></li>
-      <li><span class="stats-num">10</span><span class="stats-unit">件</span><span class="stats-label">学会発表（査読あり論文も）</span></li>
-      <li><span class="stats-num">2</span><span class="stats-unit">年連続</span><span class="stats-label">防災科研の一般公開に出展</span></li>
-      <li><span class="stats-num">300</span><span class="stats-unit">万円</span><span class="stats-label">今回の目標額</span></li>
-    </ul>
-  </section>
+  <span data-dock-after aria-hidden="true"></span>
 
   <!-- 流れる帯 -->
-  <div class="ticker" aria-hidden="true">
-    <div class="ticker-track">
-      <span>科学</span><span>防災</span><span>土木</span><span>探究</span><span>洪水模型</span><span>出前授業</span><span>ボードゲーム</span><span>サイエンスカフェ</span><span>東北大学</span>
-      <span>科学</span><span>防災</span><span>土木</span><span>探究</span><span>洪水模型</span><span>出前授業</span><span>ボードゲーム</span><span>サイエンスカフェ</span><span>東北大学</span>
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>関心ゼロの人にこそ届ける</span><span>科学×防災</span><span>食卓にボードゲーム</span><span>教室に博士学生</span><span>旅先でサイエンスカフェ</span>
+      <span>関心ゼロの人にこそ届ける</span><span>科学×防災</span><span>食卓にボードゲーム</span><span>教室に博士学生</span><span>旅先でサイエンスカフェ</span>
     </div>
   </div>
 
-  <!-- 代表のあいさつ -->
-  <section class="greeting" aria-labelledby="greeting-title">
-    <div class="greeting-inner">
+  <!-- ② 30秒でわかる -->
+  <section class="quick" id="quick" aria-labelledby="quick-title">
+    <div class="wrap">
+      <h2 class="sec-title" id="quick-title">30秒でわかる、<br class="sp">私たちの挑戦</h2>
+      <ol class="quick-grid">
+        <li class="qcard">
+          <span class="q">だれ？</span>
+          <p class="qcard-claim">東北大の学生33人のチーム「HagiiZ」</p>
+          <p class="note">地球科学、情報学、防災学。専門はばらばらの大学院生・学部生が、研究を社会に届ける活動をしています。</p>
+        </li>
+        <li class="qcard">
+          <span class="q">なにする？</span>
+          <p class="qcard-claim">関心がない人に、<br>遊びで科学を届ける</p>
+          <p class="note">食卓のボードゲーム、高校の出前授業、失敗を体験する脱出ゲーム、旅先の宿のサイエンスカフェ。この4つで「科学を自分事にする場」をつくります。</p>
+        </li>
+        <li class="qcard qcard--ask">
+          <span class="q">いくら？</span>
+          <p class="qcard-claim">目標は50万円。<br><span data-min>100円から</span>応援できます</p>
+          <p class="note">HagiiZのプロジェクトのひとつとして、東北大学が主催し選考を通った企画だけが挑戦できる「ともプロ！2026」に挑みます。手数料なしで全額が届きます。</p>
+          <a class="btn btn--donate" data-donate="quick" href="#">寄付する</a>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ③ いま、どこまで来たか -->
+  <section class="progress" aria-labelledby="progress-title">
+    <div class="wrap">
+      <h2 class="sec-title" id="progress-title">あなたの寄付で、<br class="sp">できること</h2>
+      <div id="units"></div>
+      <div class="progress-grid">
+        <div class="progress-meter" data-gauge></div>
+        <div>
+          <h3 class="mini-title">50万円の使い道</h3>
+          <div id="funds"></div>
+        </div>
+      </div>
+      <div id="stages"></div>
+    </div>
+  </section>
+
+  <!-- ④ 数字 -->
+  <section class="stats" aria-label="HagiiZのこれまで">
+    <ul class="wrap">
+      <li><span class="stats-num" data-count="33" data-suffix="">33</span><span class="stats-unit">人</span><span class="stats-label">博士学生を中心とした東北大生</span></li>
+      <li><span class="stats-num" data-count="300" data-suffix="">300</span><span class="stats-unit">人以上</span><span class="stats-label">の親子が、放射線のボードゲームで遊んだ</span></li>
+      <li><span class="stats-num" data-count="10" data-suffix="">10</span><span class="stats-unit">件</span><span class="stats-label">学会発表（査読あり論文も）</span></li>
+      <li><span class="stats-num" data-count="2" data-suffix="">2</span><span class="stats-unit">年連続</span><span class="stats-label">防災科研の一般公開に出展</span></li>
+    </ul>
+  </section>
+
+  <!-- ⑤ 代表のあいさつ（動画が未設定なら公開時に隠れます） -->
+  <section class="greeting" id="greeting" aria-labelledby="greeting-title">
+    <div class="wrap greeting-inner">
       <div class="greeting-text">
-        <p class="eyebrow">代表より</p>
-        <h2 id="greeting-title">まず、聞いてください。</h2>
-        <p class="greeting-sign">東北大学発 HagiiZ 代表　<span data-name></span></p>
+        <h2 class="sec-title" id="greeting-title">代表から、<br>ひとこと。</h2>
+        <p class="note">東北大学発 HagiiZ 代表　<span data-name></span></p>
       </div>
       <div class="video-frame" id="video"></div>
     </div>
   </section>
 
-  <!-- 3つの入口 -->
+  <!-- ⑥ 3つの物語 -->
   <section class="doors" aria-labelledby="doors-title">
-    <div class="doors-head">
-      <p class="eyebrow">3つの物語</p>
-      <h2 class="doors-title" id="doors-title">あなたに近い分野から、お読みください。</h2>
-    </div>
+    <div class="wrap">
+      <h2 class="sec-title" id="doors-title">あなたに近い分野から、<br class="sp">読んでください</h2>
+      <p class="note doors-lead">どれも「なぜ、このプロジェクトなのか」を代表が書いた物語です。<br>忙しい人は<b class="fast-word">倍速モード</b>で、要点だけ読めます。</p>
 
-    <div class="doors-grid">
+      <div class="doors-grid">
+        <a class="door" data-layer="science" href="science.html">
+          <div class="door-img" data-slot="top/door-science" data-alt="サイエンスの物語"></div>
+          <div class="door-body">
+            <span class="door-pill">教育・科学に携わる方へ</span>
+            <span class="door-title">いろんなかたちの好奇心が、光る場をつくりたい</span>
+            <span class="door-meta">約6分／倍速なら約2分</span>
+          </div>
+        </a>
 
-      <a class="door" data-layer="science" href="science.html">
-        <div class="door-phone">
-          <span class="door-notch" aria-hidden="true"></span>
-          <div data-slot="top/door-science" data-alt="サイエンスの物語"></div>
-        </div>
-        <div class="door-body">
-          <span class="door-pill">教育・科学に携わる方へ</span>
-          <span class="door-title">いろんなかたちの好奇心が、光る場をつくりたい</span>
-          <span class="door-go">物語を読む</span>
-        </div>
-      </a>
+        <a class="door" data-layer="doboku" href="doboku.html">
+          <div class="door-img" data-slot="top/door-doboku" data-alt="土木の物語"></div>
+          <div class="door-body">
+            <span class="door-pill">土木・インフラに携わる方へ</span>
+            <span class="door-title">守られた日常が、誰かの仕事の結果だと知られてほしい</span>
+            <span class="door-meta">約7分／倍速なら約3分</span>
+          </div>
+        </a>
 
-      <a class="door" data-layer="doboku" href="doboku.html">
-        <div class="door-phone">
-          <span class="door-notch" aria-hidden="true"></span>
-          <div data-slot="top/door-doboku" data-alt="土木の物語"></div>
-        </div>
-        <div class="door-body">
-          <span class="door-pill">土木・インフラに携わる方へ</span>
-          <span class="door-title">守られた日常が、誰かの仕事の結果だと知られてほしい</span>
-          <span class="door-go">物語を読む</span>
-        </div>
-      </a>
-
-      <a class="door" data-layer="bosai" href="bosai.html">
-        <div class="door-phone">
-          <span class="door-notch" aria-hidden="true"></span>
-          <div data-slot="top/door-bosai" data-alt="防災の物語"></div>
-        </div>
-        <div class="door-body">
-          <span class="door-pill">防災に携わる方へ</span>
-          <span class="door-title">防災に関心がない人にこそ、届いてほしい</span>
-          <span class="door-go">物語を読む</span>
-        </div>
-      </a>
-
+        <a class="door" data-layer="bosai" href="bosai.html">
+          <div class="door-img" data-slot="top/door-bosai" data-alt="防災の物語"></div>
+          <div class="door-body">
+            <span class="door-pill">防災に携わる方へ</span>
+            <span class="door-title">防災に関心がない人にこそ、届いてほしい</span>
+            <span class="door-meta">約5分／倍速なら約2分</span>
+          </div>
+        </a>
+      </div>
     </div>
   </section>
 
-  <!-- 支援 -->
-  <section class="support" aria-labelledby="support-title">
-    <div class="support-inner">
-      <h2 id="support-title">宮岸プロジェクトへのご支援</h2>
-      <p>ご寄付は、東北大学基金のページから受け付けています。</p>
-      <div class="btn-row">
-        <a class="btn btn--donate btn--lg" data-donate href="#">寄付する</a>
-        <a class="btn btn--sub" data-project href="#">宮岸プロジェクトを見る</a>
+  <!-- ⑦ 返礼品と、寄付のしかた -->
+  <section class="gift-sec" aria-labelledby="gift-title">
+    <div class="wrap gift-inner">
+      <div>
+        <h2 class="sec-title" id="gift-title">寄付すると、<br>届くもの</h2>
+        <p class="note">1回あたりの寄付額が対象です。野帳・カレー・ビールは、10月1日〜11月30日の応援月間の特別返礼品です。</p>
+        <div id="gifts"></div>
       </div>
+      <div>
+        <h2 class="sec-title">寄付のしかた</h2>
+        <div id="howto"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑧ よくある質問 -->
+  <section class="faq" aria-labelledby="faq-title">
+    <div class="wrap faq-inner">
+      <h2 class="sec-title" id="faq-title">よくある質問</h2>
+      <div class="faq-list">
+        <details>
+          <summary>いつから寄付できますか？</summary>
+          <p class="note">2026年10月1日から11月30日までです。それより前は受け付けていないので、「予定に入れる」ボタンでカレンダーに登録しておくと便利です。</p>
+        </details>
+        <details>
+          <summary>「ともプロ！」って何ですか？</summary>
+          <p class="note">東北大学基金が主催する、学生のためのクラウドファンディングです。応募した企画のうち、選考を通ったものだけが挑戦できます。<a data-tomopro href="#">ほかの挑戦も見る</a></p>
+        </details>
+        <details>
+          <summary>東北大学の関係者でなくても寄付できますか？</summary>
+          <p class="note">できます。どなたでも寄付でき、返礼品も同じように届きます。1万円以上の方には、洪水流域模型にお名前を刻む特典もあります。</p>
+        </details>
+        <details>
+          <summary>いくらから寄付できますか？</summary>
+          <p class="note">Amazon Payなら100円からできます（領収書・返礼品なしの場合）。領収書や返礼品が必要な場合は1,000円からです。</p>
+        </details>
+        <details>
+          <summary>税金の控除は受けられますか？</summary>
+          <p class="note">「ともプロ！」への寄付は、税制上の優遇措置の対象です（領収書を発行した場合）。詳しくは<a href="https://www.kikin.tohoku.ac.jp/donator/tax" target="_blank" rel="noopener">東北大学基金の案内</a>をご覧ください。</p>
+        </details>
+        <details>
+          <summary>手数料は引かれますか？</summary>
+          <p class="note">引かれません。外部のクラウドファンディングサービスを通さず、東北大学基金が直接受け付けるためです。</p>
+        </details>
+        <details>
+          <summary>寄付ページの名前や代表者が、このサイトと違います</summary>
+          <p class="note">今回の挑戦は、HagiiZのプロジェクトのひとつとして<b data-donate-owner></b>の名義で申し込んでいます。基金のページでは<b data-donate-label></b>として載っています。そこが私たちの窓口です。</p>
+        </details>
+        <details>
+          <summary>支払い方法は？</summary>
+          <p class="note">クレジットカード、銀行振込、コンビニ、郵便振替、PayPay、Amazon Payから選べます。法人・団体の方もWebフォームから申し込めます。</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑨ 最後のひと押し -->
+  <section class="final" aria-labelledby="final-title">
+    <div class="wrap final-inner">
+      <p class="count-chip" data-countdown></p>
+      <h2 class="final-title" id="final-title">関心がない人に届く方法を、<br>一緒につくってください。</h2>
+      <p class="note final-remain" id="remain"></p>
+      <div class="btn-row">
+        <a class="btn btn--donate btn--lg" data-donate="final" href="#">寄付する</a>
+
+      </div>
+      <div id="share"></div>
     </div>
   </section>
 </main>
@@ -201,7 +305,11 @@
   <p>© HagiiZ</p>
 </footer>
 
-<a class="btn btn--donate donate-fixed" data-donate href="#">寄付する</a>
+<!-- 画面下の寄付バー（最初の画面を過ぎると出ます） -->
+<div class="dock" aria-label="寄付">
+  <span class="dock-info"><span class="dock-count" data-countdown></span><span class="dock-goal">目標 <b data-goal></b></span></span>
+  <a class="btn btn--donate" data-donate="dock" href="#">寄付する</a>
+</div>
 
 <script src="assets/js/config.js"></script>
 <script src="assets/js/common.js"></script>
